@@ -1,0 +1,45 @@
+version: '3.1'
+services:
+  shib-proxy2:
+    image: uscdev/shib-proxy
+    environment:
+      - CLIENT_APP_SCHEME=https
+      - CLIENT_APP_HOSTNAME=shib-test-site.docker.usc.edu
+      - NGINX_PROXY_DESTINATION=http://shib-test-site:80
+      - CLIENT_APP_SECURE_PATH=/
+    ports:
+      - 8984:80
+      - 8983:443
+    networks:
+      - proxy
+    deploy:
+      labels:
+        - com.df.notify=true
+        - com.df.distribute=true
+        - com.df.httpsOnly=true
+        - com.df.port=443
+        - com.df.serviceDomain=shib-test-site.docker.usc.edu
+        - com.df.sslVerifyNone=true
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+  shib-test-site:
+    image: uscdev/shib-test-site
+    networks:
+      - proxy
+    ports:
+      - 8985:80
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+networks:
+  proxy:
+    external:
+      name: proxy

@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.6'
 services:
   shib-proxy2:
     image: uscdev/shib-proxy
@@ -7,9 +7,9 @@ services:
       - CLIENT_APP_HOSTNAME=shib-test-site.docker.usc.edu
       - NGINX_PROXY_DESTINATION=http://shib-test-site:80
       - CLIENT_APP_SECURE_PATH=/
-    ports:
-      - 8984:80
-      - 8983:443
+#    ports:
+#      - 8984:80
+#      - 8983:443
     networks:
       - proxy
     deploy:
@@ -30,8 +30,8 @@ services:
     image: uscdev/shib-test-site
     networks:
       - proxy
-    ports:
-      - 8985:80
+#    ports:
+#      - 8985:80
     deploy:
       replicas: 1
       update_config:
@@ -41,5 +41,5 @@ services:
         condition: on-failure
 networks:
   proxy:
-    external:
-      name: proxy
+    external: true
+    name: proxy

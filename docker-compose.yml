@@ -1,11 +1,11 @@
-version: '3.1'
+version: '3.6'
 services:
   shib-test-site:
     image: uscdev/shib-test-site
     ports:
       - 8001:80
     networks:
-      web-bus:
+      proxy:
     deploy:
       replicas: 1
       update_config:
@@ -14,6 +14,5 @@ services:
       restart_policy:
         condition: on-failure
 networks:
-  web-bus:
-    external:
-      name: web-bus
+  proxy:
+    external: true
